@@ -26,11 +26,10 @@ const router = Router();
 
 export default {
   fetch: (r: Request, e: Env, c: ExecutionContext) =>
-    router
-      .handle(r, e, c)
-      .then((resp: Response) =>
-        resp.headers.append("Access-Control-Allow-Origin", "*")
-      ),
+    router.handle(r, e, c).then((resp: Response) => {
+      resp.headers.append("Access-Control-Allow-Origin", "*");
+      return resp;
+    }),
 };
 
 router.get("/", async () => {
