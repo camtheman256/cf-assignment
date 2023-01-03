@@ -28,27 +28,39 @@ export default {
   fetch: router.handle,
 };
 
-router.get("/", async (request, env: Env, ctx: ExecutionContext) => {
+router.get("/", async () => {
   return new Response("Hello world!");
 });
 
-router.post(
-  "/traffic-change",
-  async (request, env: Env, ctx: ExecutionContext) => {
-    const req = request as unknown as Request;
-    const csvData = await req.text();
-    const jsonData = convertCsvToJson(csvData);
-    env.DB.put("traffic-change", JSON.stringify(jsonData));
-    return Response.json(jsonData);
-  }
-);
+router.post("/traffic-change", async (request, env: Env) => {
+  const req = request as unknown as Request;
+  const csvData = await req.text();
+  const jsonData = convertCsvToJson(csvData);
+  env.DB.put("traffic-change", JSON.stringify(jsonData));
+  return Response.json(jsonData);
+});
 
-router.get(
-  "/traffic-change",
-  async (request, env: Env, ctx: ExecutionContext) => {
-    return Response.json(await env.DB.get("traffic-change", "json"));
-  }
-);
+router.get("/traffic-change", async (request, env: Env) => {
+  return Response.json(await env.DB.get("traffic-change", "json"));
+});
+
+router.post("/popular-domains", async (request, env: Env) => {
+  const req = request as unknown as Request;
+  const csvData = await req.text();
+  const [headers, ...domains] = csvData.split("\n").map(parseCsvLine);
+  domains.pop(); // remove empty line at the end
+  const jsonData = {
+    rankedDomains: domains.map((d) =>
+      Object.fromEntries(d.map((v, i) => [headers[i], v]))
+    ),
+  };
+  env.DB.put("popular-domains", JSON.stringify(jsonData));
+  return Response.json(jsonData);
+});
+
+router.get("/popular-domains", async (request, env: Env) => {
+  return Response.json(await env.DB.get("popular-domains", "json"));
+});
 
 router.all("*", () => new Response("404 Not Found", { status: 404 }));
 
