@@ -62,6 +62,18 @@ router.get("/popular-domains", async (request, env: Env) => {
   return Response.json(await env.DB.get("popular-domains", "json"));
 });
 
+router.post("/attack-layer3", async (request, env: Env) => {
+  const req = request as unknown as Request;
+  const csvData = await req.text();
+  const jsonData = convertCsvToJson(csvData);
+  env.DB.put("attack-layer3", JSON.stringify(jsonData));
+  return Response.json(jsonData);
+});
+
+router.get("/attack-layer3", async (request, env: Env) => {
+  return Response.json(await env.DB.get("attack-layer3", "json"));
+});
+
 router.all("*", () => new Response("404 Not Found", { status: 404 }));
 
 /**
