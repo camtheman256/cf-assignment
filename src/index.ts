@@ -25,7 +25,12 @@ export interface Env {
 const router = Router();
 
 export default {
-  fetch: router.handle,
+  fetch: (r: Request, e: Env, c: ExecutionContext) =>
+    router
+      .handle(r, e, c)
+      .then((resp: Response) =>
+        resp.headers.append("Access-Control-Allow-Origin", "*")
+      ),
 };
 
 router.get("/", async () => {
