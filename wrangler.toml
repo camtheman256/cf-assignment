@@ -1,3 +1,8 @@
 name = "cf-assignment"
 main = "src/index.ts"
 compatibility_date = "2023-01-03"
+
+[[kv_namespaces]]
+binding = "DB"
+id = "b794b7fd88114f83b2cc865b8e88dd7f"
+preview_id = "b794b7fd88114f83b2cc865b8e88dd7f"
