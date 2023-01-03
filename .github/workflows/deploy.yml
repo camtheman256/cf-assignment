@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
-      - uses: actions/checkout@v2
-      - uses: bahmutov/npm-install@v1.6.0
+      - uses: actions/checkout@v3.2.0
+      - uses: bahmutov/npm-install@v1.8.27
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
